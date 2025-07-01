@@ -35,7 +35,8 @@
 <div class="card">
     <div class="card-header"><h2>Veículos do Cliente</h2></div>
     <div class="card-body">
-        <table class="table">
+        <div class="table-responsive">
+<table class="table">
             <thead><tr><th>Placa</th><th>Marca/Modelo</th><th>Ano</th><th>Cor</th></tr></thead>
             <tbody>
                 {% for veiculo in veiculos %}
@@ -50,13 +51,15 @@
                 {% endfor %}
             </tbody>
         </table>
+</div>
     </div>
 </div>
 
 <div class="card">
     <div class="card-header"><h2>Histórico de Ordens de Serviço</h2></div>
     <div class="card-body">
-        <table class="table">
+        <div class="table-responsive">
+<table class="table">
             <thead><tr><th>#OS</th><th>Data</th><th>Veículo</th><th>Status</th><th class="text-end">Total</th><th>Ações</th></tr></thead>
             <tbody>
                 {% for ordem in ordens | sort(attribute='numero_os', reverse=true) %}
@@ -73,6 +76,7 @@
                 {% endfor %}
             </tbody>
         </table>
+</div>
     </div>
 </div>
 

@@ -25,6 +25,7 @@
 <button class="btn btn-secondary no-print" onclick="window.print()"><i class="fas fa-print"></i> Imprimir</button>
 </div><div class="card-body">
 <h3 class="print-only">{{ form_data.tipo_relatorio|replace('_', ' ')|title }} de {{form_data.data_inicio}} a {{form_data.data_fim}}</h3>
+<div class="table-responsive">
 <table class="table table-striped"><thead><tr><th>#OS</th><th>Data</th><th>Cliente</th><th>Veículo</th><th>Status</th><th>Total</th></tr></thead><tbody>
 {% for item in dados.items %}
 <tr><td>{{ "%04d"|format(item.numero_os) }}</td><td>{{ item.data_conclusao or item.data_abertura }}</td><td>{{ item.cliente_nome }}</td><td>{{ item.veiculo_placa }}</td><td>{{ item.status }}</td><td>{{ format_currency(item.total) }}</td></tr>
@@ -32,6 +33,7 @@
 <tr><td colspan="6" style="text-align: center;">Nenhum resultado para os filtros.</td></tr>
 {% endfor %}
 </tbody><tfoot><tr><td colspan="5" class="text-end"><strong>Total Geral:</strong></td><td><strong>{{ format_currency(dados.total_geral) }}</strong></td></tr></tfoot>
-</table></div></div>
+</table>
+</div></div></div>
 {% endif %}
 {% endblock %}

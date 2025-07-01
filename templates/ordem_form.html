@@ -66,13 +66,15 @@
     <label for="data_saida" class="form-label">Data de Saída</label>
     <input type="datetime-local" id="data_saida" name="data_saida" class="form-control" value="{{ ordem.get('data_saida') if ordem else '' }}">
 </div><input type="text" id="condicoes_pagamento" name="condicoes_pagamento" class="form-control" value="{{ ordem.condicoes_pagamento if ordem else '' }}"></div>
-</div></div><div class="col-md-4"><div class="total-section"><table>
+</div></div><div class="col-md-4"><div class="total-section"><div class="table-responsive">
+<table>
 <tr><td>Total Produtos:</td><td id="subtotal-produtos-val" class="text-end">R$ 0,00</td></tr>
 <tr><td>Total Serviços:</td><td id="subtotal-servicos-val" class="text-end">R$ 0,00</td></tr>
 <tr><td>Deslocamento (R$):</td><td><input type="text" id="deslocamento" name="deslocamento" class="form-control" value="{{ '%.2f'|format(ordem.deslocamento|float) if ordem else '0,00' }}"></td></tr>
 <tr><td>Desconto (R$):</td><td><input type="text" id="desconto" name="desconto" class="form-control" value="{{ '%.2f'|format(ordem.desconto|float) if ordem else '0,00' }}"></td></tr>
 <tr class="total-final"><td><strong>Total:</strong></td><td id="total-val" class="text-end"><strong>R$ 0,00</strong></td></tr>
-</table></div></div></div>
+</table>
+</div></div></div></div>
 <input type="hidden" id="subtotal_produtos" name="subtotal_produtos" value="{{ ordem.subtotal_produtos if ordem else 0 }}">
 <input type="hidden" id="subtotal_servicos" name="subtotal_servicos" value="{{ ordem.subtotal_servicos if ordem else 0 }}">
 <input type="hidden" id="total" name="total" value="{{ ordem.total if ordem else 0 }}">

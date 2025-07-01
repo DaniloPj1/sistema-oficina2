@@ -2,7 +2,8 @@
 {% block title %}Produtos{% endblock %}
 {% block content %}
 <div class="content-header"><h1>Gerenciar Produtos</h1><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoProdutoModal"><i class="fas fa-plus"></i> Novo Produto</button></div>
-<div class="card"><div class="card-body"><table class="table table-striped">
+<div class="card"><div class="card-body"><div class="table-responsive">
+<table class="table table-striped">
 <thead><tr><th>Código</th><th>Nome</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
 <tbody>
 {% for produto in produtos %}
@@ -17,7 +18,8 @@
 {% else %}
 <tr><td colspan="5" style="text-align: center;">Nenhum produto cadastrado.</td></tr>
 {% endfor %}
-</tbody></table></div></div>
+</tbody></table>
+</div></div></div>
 <div class="modal" id="novoProdutoModal"><div class="modal-content modal-sm">
 <form action="{{ url_for('novo_produto') }}" method="post">
 <div class="modal-header"><h5 class="modal-title">Novo Produto</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>

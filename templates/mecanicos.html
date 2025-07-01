@@ -2,7 +2,8 @@
 {% block title %}Mecânicos{% endblock %}
 {% block content %}
 <div class="content-header"><h1>Gerenciar Mecânicos</h1><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoMecanicoModal"><i class="fas fa-plus"></i> Novo Mecânico</button></div>
-<div class="card"><div class="card-body"><table class="table table-striped">
+<div class="card"><div class="card-body"><div class="table-responsive">
+<table class="table table-striped">
 <thead><tr><th>Nome</th><th>Especialidade</th><th>Ações</th></tr></thead>
 <tbody>
 {% for mecanico in mecanicos %}
@@ -16,7 +17,8 @@
 {% else %}
 <tr><td colspan="3" style="text-align: center;">Nenhum mecânico cadastrado.</td></tr>
 {% endfor %}
-</tbody></table></div></div>
+</tbody></table>
+</div></div></div>
 <div class="modal" id="novoMecanicoModal"><div class="modal-content modal-sm">
 <form action="{{ url_for('novo_mecanico') }}" method="post">
 <div class="modal-header"><h5 class="modal-title">Novo Mecânico</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>

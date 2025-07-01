@@ -13,7 +13,8 @@
         </form>
     </div>
     <div class="card-body">
-        <table class="table table-striped">
+        <div class="table-responsive">
+<table class="table table-striped">
             <thead><tr><th>Placa</th><th>Marca/Modelo</th><th>Proprietário</th><th>Ações</th></tr></thead>
             <tbody>
             {% for veiculo in veiculos %}
@@ -34,6 +35,7 @@
             {% endfor %}
             </tbody>
         </table>
+</div>
     </div>
 </div>
 {# Modal para NOVO veículo #}

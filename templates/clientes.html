@@ -13,7 +13,8 @@
         </form>
     </div>
     <div class="card-body">
-        <table class="table table-striped">
+        <div class="table-responsive">
+<table class="table table-striped">
             <thead><tr><th>Nome / Razão Social</th><th>Documento</th><th>Telefone</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody>
                 {% for cliente in clientes %}
@@ -37,6 +38,7 @@
                 {% endfor %}
             </tbody>
         </table>
+</div>
     </div>
 </div>
 {# Modal para NOVO cliente #}

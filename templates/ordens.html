@@ -2,7 +2,8 @@
 {% block title %}Ordens de Serviço{% endblock %}
 {% block content %}
 <div class="content-header"><h1>Ordens de Serviço</h1><a href="{{ url_for('ordem_form') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Nova O.S.</a></div>
-<div class="card"><div class="card-body"><table class="table table-striped">
+<div class="card"><div class="card-body"><div class="table-responsive">
+<table class="table table-striped">
 <thead><tr><th>#OS</th><th>Cliente</th><th>Veículo</th><th>Data Entrada</th><th>Data Saída</th><th>Status</th><th>Total</th><th>Ações</th></tr></thead>
 <tbody>
 {% for ordem in ordens | sort(attribute='numero_os', reverse=true) %}
@@ -18,5 +19,6 @@
 {% else %}
 <tr><td colspan="7" style="text-align: center;">Nenhuma Ordem de Serviço encontrada.</td></tr>
 {% endfor %}
-</tbody></table></div></div>
+</tbody></table>
+</div></div></div>
 {% endblock %}

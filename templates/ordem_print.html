@@ -188,7 +188,8 @@
         </div>
     </div>
 
-    <table class="main-table">
+    <div class="table-responsive">
+<table class="main-table">
         <tr class="section-title"><td colspan="3">Dados do Cliente</td></tr>
         <tr>
             <td colspan="3"><span class="label">Cliente:</span> {{ cliente.nome if cliente else 'N/A' }}</td>
@@ -206,8 +207,10 @@
         </tr>
         {% endif %}
     </table>
+</div>
 
-    <table class="main-table" style="border-top: none;">
+    <div class="table-responsive">
+<table class="main-table" style="border-top: none;">
         <tr class="section-title"><td colspan="4">Dados do Veículo</td></tr>
         <tr>
             <td><span class="label">Placa:</span> {{ veiculo.placa if veiculo else 'N/A' }}</td>
@@ -225,9 +228,11 @@
             <td colspan="2"><span class="label">Data de Saída:</span> {{ ordem.get('data_saida', '') | replace('T', ' às ') }}</td>
         </tr>
     </table>
+</div>
 
     {% if ordem.problema_relatado or ordem.diagnostico_tecnico %}
-    <table class="main-table">
+    <div class="table-responsive">
+<table class="main-table">
         {% if ordem.problema_relatado %}
         <tr class="section-title"><td colspan="4">Defeito/Reclamação do Cliente</td></tr>
         <tr><td colspan="4">{{ ordem.problema_relatado | nl2br }}</td></tr>
@@ -237,10 +242,12 @@
         <tr><td colspan="4">{{ ordem.diagnostico_tecnico | nl2br }}</td></tr>
         {% endif %}
     </table>
+</div>
     {% endif %}
 
     {% if ordem.produtos %}
-    <table class="items-table">
+    <div class="table-responsive">
+<table class="items-table">
         <thead>
             <tr>
                 <th>Cód.</th>
@@ -266,10 +273,12 @@
             </tr>
         </tbody>
     </table>
+</div>
     {% endif %}
 
     {% if ordem.servicos %}
-    <table class="items-table">
+    <div class="table-responsive">
+<table class="items-table">
         <thead>
             <tr>
                 <th>Cód.</th>
@@ -287,6 +296,7 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
     {% endif %}
 
     <div class="footer">
@@ -301,7 +311,8 @@
                 {% endif %}
             </div>
             <div class="footer-right">
-                <table class="summary-table">
+                <div class="table-responsive">
+<table class="summary-table">
                     <tr>
                         <td class="label">VALOR PRODUTOS:</td>
                         <td class="value">{{ "%.2f"|format(ordem.subtotal_produtos|float) }}</td>
@@ -327,6 +338,7 @@
                         <td class="value">{{ "%.2f"|format(ordem.total|float) }}</td>
                     </tr>
                 </table>
+</div>
             </div>
         </div>
 
