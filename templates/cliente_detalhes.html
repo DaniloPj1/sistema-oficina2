@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Detalhes de {{ cliente.nome }}{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h1>Detalhes do Cliente</h1>
+    <div>
+        <a href="{{ url_for('clientes') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="{{ url_for('imprimir_ficha_cliente', item_id=cliente.id) }}" class="btn btn-info" target="_blank"><i class="fas fa-print"></i> Imprimir Ficha</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>{{ cliente.nome }} <span class="badge bg-{{ (cliente.status or 'Liberado')|lower }}">{{ cliente.status or 'Liberado' }}</span></h2>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6"><strong>{{ 'CPF' if cliente.tipo_cliente == 'pf' else 'CNPJ' }}:</strong> {{ cliente.cpf or cliente.cnpj }}</div>
+            <div class="col-md-6"><strong>{{ 'RG' if cliente.tipo_cliente == 'pf' else 'Inscrição Estadual' }}:</strong> {{ cliente.rg or cliente.ie }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6"><strong>Email:</strong> {{ cliente.email }}</div>
+            <div class="col-md-6"><strong>Telefone:</strong> {{ cliente.telefone }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12"><strong>Endereço:</strong> {{ cliente.rua }}, {{ cliente.numero }} - {{ cliente.bairro }}, {{ cliente.cidade }} - {{ cliente.uf }} (CEP: {{ cliente.cep }})</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"><strong>Data de Cadastro:</strong> {{ cliente.data_cadastro }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><h2>Veículos do Cliente</h2></div>
+    <div class="card-body">
+        <table class="table">
+            <thead><tr><th>Placa</th><th>Marca/Modelo</th><th>Ano</th><th>Cor</th></tr></thead>
+            <tbody>
+                {% for veiculo in veiculos %}
+                <tr>
+                    <td><a href="{{ url_for('detalhes_veiculo', item_id=veiculo.id) }}" style="color:var(--info-color)">{{ veiculo.placa }}</a></td>
+                    <td>{{ veiculo.marca }} / {{ veiculo.modelo }}</td>
+                    <td>{{ veiculo.ano }}</td>
+                    <td>{{ veiculo.cor }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center">Nenhum veículo cadastrado para este cliente.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><h2>Histórico de Ordens de Serviço</h2></div>
+    <div class="card-body">
+        <table class="table">
+            <thead><tr><th>#OS</th><th>Data</th><th>Veículo</th><th>Status</th><th class="text-end">Total</th><th>Ações</th></tr></thead>
+            <tbody>
+                {% for ordem in ordens | sort(attribute='numero_os', reverse=true) %}
+                <tr>
+                    <td>{{ "%04d"|format(ordem.numero_os) }}</td>
+                    <td>{{ ordem.data_abertura }}</td>
+                    <td>{{ ordem.veiculo_placa }}</td>
+                    <td><span class="badge bg-info">{{ ordem.status }}</span></td>
+                    <td class="text-end">{{ format_currency(ordem.total) }}</td>
+                    <td><a href="{{ url_for('ordem_form', item_id=ordem.id) }}" class="btn btn-sm btn-secondary">Ver O.S.</a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center">Nenhuma ordem de serviço encontrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

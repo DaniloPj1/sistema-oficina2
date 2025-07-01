@@ -1,0 +1,76 @@
+<div class="modal" id="{{ 'clienteModal' if not cliente else 'clienteModal-' ~ cliente.id }}">
+<div class="modal-content modal-sm">
+  <form action="{{ url_for('salvar_cliente') }}{% if request.args.get('next') %}?next={{ request.args.get('next') }}{% endif %}" method="post" class="client-form">
+    <input type="hidden" name="id" value="{{ cliente.id if cliente else '' }}">
+    <div class="modal-header">
+        <h5 class="modal-title">{% if not cliente %}Novo Cliente{% else %}Editar Cliente{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="form-label">Tipo de Cliente</label>
+            <div>
+                <input type="radio" name="tipo_cliente" value="pf" id="pf-{{ cliente.id if cliente else 'new' }}" {% if not cliente or cliente.tipo_cliente == 'pf' %}checked{% endif %}> <label for="pf-{{ cliente.id if cliente else 'new' }}">Pessoa Física</label>
+                <input type="radio" name="tipo_cliente" value="pj" id="pj-{{ cliente.id if cliente else 'new' }}" {% if cliente and cliente.tipo_cliente == 'pj' %}checked{% endif %} style="margin-left: 15px;"> <label for="pj-{{ cliente.id if cliente else 'new' }}">Pessoa Jurídica</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <label class="form-label">Nome / Razão Social</label>
+                <input type="text" name="nome" class="form-control" value="{{ cliente.nome if cliente else '' }}" required>
+            </div>
+        </div>
+
+        <div class="pj-fields" style="display: none;">
+             <div class="row">
+                <div class="col-md-12 form-group"><label class="form-label">Nome Fantasia</label><input type="text" name="nome_fantasia" value="{{ cliente.nome_fantasia if cliente else '' }}" class="form-control"></div>
+                <div class="col-md-6 form-group"><label class="form-label">CNPJ</label><input type="text" name="cnpj" value="{{ cliente.cnpj if cliente else '' }}" class="form-control"></div>
+                <div class="col-md-6 form-group"><label class="form-label">Inscrição Estadual</label><input type="text" name="ie" value="{{ cliente.ie if cliente else '' }}" class="form-control"></div>
+             </div>
+        </div>
+
+        <div class="pf-fields" style="display: none;">
+            <div class="row">
+                <div class="col-md-6 form-group"><label class="form-label">CPF</label><input type="text" name="cpf" value="{{ cliente.cpf if cliente else '' }}" class="form-control"></div>
+                <div class="col-md-6 form-group"><label class="form-label">RG</label><input type="text" name="rg" value="{{ cliente.rg if cliente else '' }}" class="form-control"></div>
+            </div>
+        </div>
+
+        <hr style="border-color: var(--border-color); margin: 1rem 0;">
+
+        <div class="row">
+            <div class="col-md-6 form-group"><label class="form-label">Telefone</label><input type="text" name="telefone" class="form-control" value="{{ cliente.telefone if cliente else '' }}"></div>
+            <div class="col-md-6 form-group"><label class="form-label">Email</label><input type="email" name="email" class="form-control" value="{{ cliente.email if cliente else '' }}"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group"><label class="form-label">CEP</label><input type="text" name="cep" class="form-control" value="{{ cliente.cep if cliente else '' }}"></div>
+            <div class="col-md-8 form-group"><label class="form-label">Rua / Logradouro</label><input type="text" name="rua" class="form-control" value="{{ cliente.rua if cliente else '' }}"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 form-group"><label class="form-label">Nº</label><input type="text" name="numero" class="form-control" value="{{ cliente.numero if cliente else '' }}"></div>
+            <div class="col-md-4 form-group"><label class="form-label">Bairro</label><input type="text" name="bairro" class="form-control" value="{{ cliente.bairro if cliente else '' }}"></div>
+            <div class="col-md-4 form-group"><label class="form-label">Cidade</label><input type="text" name="cidade" class="form-control" value="{{ cliente.cidade if cliente else '' }}"></div>
+            <div class="col-md-2 form-group"><label class="form-label">UF</label><input type="text" name="uf" class="form-control" value="{{ cliente.uf if cliente else '' }}"></div>
+        </div>
+
+        <hr style="border-color: var(--border-color); margin: 1rem 0;">
+
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <div>
+                {% set statuses = ['Liberado', 'Restringido', 'Bloqueado'] %}
+                {% for s in statuses %}
+                <input type="radio" name="status" value="{{ s }}" id="status-{{ s|lower }}-{{ cliente.id if cliente else 'new' }}" {% if (cliente and cliente.status == s) or (not cliente and s == 'Liberado') %}checked{% endif %} style="margin-left: {% if not loop.first %}15px{% else %}0{% endif %};"> 
+                <label for="status-{{ s|lower }}-{{ cliente.id if cliente else 'new' }}">{{ s }}</label>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+  </form>
+</div></div>

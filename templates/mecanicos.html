@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Mecânicos{% endblock %}
+{% block content %}
+<div class="content-header"><h1>Gerenciar Mecânicos</h1><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoMecanicoModal"><i class="fas fa-plus"></i> Novo Mecânico</button></div>
+<div class="card"><div class="card-body"><table class="table table-striped">
+<thead><tr><th>Nome</th><th>Especialidade</th><th>Ações</th></tr></thead>
+<tbody>
+{% for mecanico in mecanicos %}
+<tr><td>{{ mecanico.nome }}</td><td>{{ mecanico.especialidade }}</td>
+<td>
+    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarMecanicoModal-{{ mecanico.id }}" title="Editar"><i class="fas fa-edit"></i></button>
+    <form action="{{ url_for('deletar_mecanico', item_id=mecanico.id) }}" method="post" class="d-inline delete-form">
+        <button type="submit" class="btn btn-sm btn-danger" title="Deletar"><i class="fas fa-trash"></i></button>
+    </form>
+</td></tr>
+{% else %}
+<tr><td colspan="3" style="text-align: center;">Nenhum mecânico cadastrado.</td></tr>
+{% endfor %}
+</tbody></table></div></div>
+<div class="modal" id="novoMecanicoModal"><div class="modal-content modal-sm">
+<form action="{{ url_for('novo_mecanico') }}" method="post">
+<div class="modal-header"><h5 class="modal-title">Novo Mecânico</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+    <div class="form-group"><label class="form-label">Nome</label><input type="text" name="nome" class="form-control" required></div>
+    <div class="form-group"><label class="form-label">Especialidade</label><input type="text" name="especialidade" class="form-control" required></div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
+</form></div></div>
+{% for mecanico in mecanicos %}
+<div class="modal" id="editarMecanicoModal-{{ mecanico.id }}"><div class="modal-content modal-sm">
+<form action="{{ url_for('editar_mecanico', item_id=mecanico.id) }}" method="post">
+<div class="modal-header"><h5 class="modal-title">Editar Mecânico</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+    <div class="form-group"><label class="form-label">Nome</label><input type="text" name="nome" class="form-control" value="{{ mecanico.nome }}" required></div>
+    <div class="form-group"><label class="form-label">Especialidade</label><input type="text" name="especialidade" class="form-control" value="{{ mecanico.especialidade }}" required></div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><button type="submit" class="btn btn-primary">Salvar Alterações</button></div>
+</form></div></div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Veículos{% endblock %}
+{% block content %}
+<div class="content-header">
+    <h1>Gerenciar Veículos</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#veiculoModal"><i class="fas fa-plus"></i> Novo Veículo</button>
+</div>
+<div class="card">
+    <div class="card-header">
+        <form method="get" action="{{ url_for('veiculos') }}" class="d-flex">
+            <input type="search" name="q" class="form-control" placeholder="Pesquisar por placa, marca ou modelo..." value="{{ query or '' }}">
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Buscar</button>
+        </form>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead><tr><th>Placa</th><th>Marca/Modelo</th><th>Proprietário</th><th>Ações</th></tr></thead>
+            <tbody>
+            {% for veiculo in veiculos %}
+            <tr>
+                <td><a href="{{ url_for('detalhes_veiculo', item_id=veiculo.id) }}" style="color: var(--info-color);">{{ veiculo.placa }}</a></td>
+                <td>{{ veiculo.marca }} / {{ veiculo.modelo }}</td>
+                <td><a href="{{url_for('detalhes_cliente', item_id=veiculo.cliente_id)}}" style="color:var(--text-secondary)">{{ veiculo.cliente_nome }}</a></td>
+                <td>
+                    <a href="{{ url_for('detalhes_veiculo', item_id=veiculo.id) }}" class="btn btn-sm btn-info" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#veiculoModal-{{ veiculo.id }}" title="Editar"><i class="fas fa-edit"></i></button>
+                    <form action="{{ url_for('deletar_veiculo', item_id=veiculo.id) }}" method="post" class="d-inline delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger" title="Deletar"><i class="fas fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="text-align: center;">Nenhum veículo encontrado.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{# Modal para NOVO veículo #}
+{% set veiculo = none %}
+{% include 'veiculo_form_modal.html' %}
+
+{# Modais para EDITAR veículos existentes #}
+{% for veiculo_item in veiculos %}
+    {% set veiculo = veiculo_item %}
+    {% include 'veiculo_form_modal.html' %}
+{% endfor %}
+{% endblock %}

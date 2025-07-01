@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Painel de Controle{% endblock %}
+
+{% block content %}
+<div class="header-clock">
+    <span id="time"></span>
+    <small id="date"></small>
+</div>
+
+<h1 class="content-header" style="border:0; margin-bottom: 1.5rem;">Painel de Controle</h1>
+
+<div class="dashboard-cards">
+    <div class="stat-card faturamento">
+        <div class="info">
+            <h4>{{ format_currency(stats.faturamento_mes) }}</h4>
+            <p>Faturamento do Mês</p>
+        </div>
+        <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+    </div>
+    <div class="stat-card os-concluidas">
+        <div class="info">
+            <h4>{{ stats.os_concluidas_mes }}</h4>
+            <p>O.S. Concluídas (Mês)</p>
+        </div>
+        <div class="icon"><i class="fas fa-check"></i></div>
+    </div>
+    <div class="stat-card os-abertas">
+        <div class="info">
+            <h4>{{ stats.os_abertas }}</h4>
+            <p>O.S. Abertas</p>
+        </div>
+        <div class="icon"><i class="fas fa-tools"></i></div>
+    </div>
+    <div class="stat-card veiculos-cadastrados">
+        <div class="info">
+            <h4>{{ stats.veiculos_cadastrados }}</h4>
+            <p>Veículos Cadastrados</p>
+        </div>
+        <div class="icon"><i class="fas fa-car"></i></div>
+    </div>
+</div>
+{% endblock %}

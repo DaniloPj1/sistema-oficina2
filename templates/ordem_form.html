@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="content-header"><h1>{{ title }}</h1><a href="{{ url_for('ordens') }}" class="btn btn-secondary">Voltar</a></div>
+<form id="os-form" action="{{ url_for('salvar_ordem') }}" method="post" class="card">
+<input type="hidden" name="id" value="{{ ordem.id if ordem else '' }}">
+<div class="card-body">
+<h4>1. Dados Principais</h4>
+<div class="row">
+    <div class="col-md-6 form-group"><label for="cliente_id" class="form-label">Cliente</label><div class="input-group">
+        <select id="cliente_id" name="cliente_id" class="form-select" required><option value="">Selecione...</option>{% for c in clientes %}<option value="{{ c.id }}" {% if ordem and ordem.cliente_id == c.id %}selected{% endif %}>{{ c.nome }}</option>{% endfor %}</select>
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#novoClienteModalOS" title="Novo Cliente">+</button>
+    </div></div>
+    <div class="col-md-6 form-group"><label for="veiculo_id" class="form-label">Veículo</label><div class="input-group">
+        <select id="veiculo_id" name="veiculo_id" class="form-select" data-selected="{{ ordem.veiculo_id if ordem else '' }}" required><option value="">Selecione um cliente primeiro</option></select>
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#novoVeiculoModalOS" title="Novo Veículo">+</button>
+    </div></div>
+    <div class="col-md-3 form-group"><label for="mecanico_id" class="form-label">Mecânico</label><select id="mecanico_id" name="mecanico_id" class="form-select" required><option value="">Selecione...</option>{% for m in mecanicos %}<option value="{{ m.id }}" {% if ordem and ordem.mecanico_id == m.id %}selected{% endif %}>{{ m.nome }}</option>{% endfor %}</select></div>
+    <div class="col-md-3 form-group"><label for="km_entrada" class="form-label">KM de Entrada</label><input type="text" id="km_entrada" name="km_entrada" class="form-control" value="{{ ordem.km_entrada if ordem else '' }}"></div>
+    <div class="col-md-3 form-group"><label for="box" class="form-label">Box</label><input type="text" id="box" name="box" class="form-control" value="{{ ordem.box if ordem else '' }}"></div>
+    <div class="col-md-3 form-group">
+        <label for="data_entrada" class="form-label">Data de Entrada</label>
+        <input type="datetime-local" id="data_entrada" name="data_entrada" class="form-control" value="{{ ordem.get('data_entrada') if ordem else '' }}">
+    </div>
+    <div class="col-md-6 form-group"><label for="problema_relatado" class="form-label">Defeito Relatado pelo Cliente</label><textarea id="problema_relatado" name="problema_relatado" class="form-control" rows="3">{{ ordem.problema_relatado if ordem else '' }}</textarea></div>
+    <div class="col-md-6 form-group"><label for="diagnostico_tecnico" class="form-label">Diagnóstico Técnico da Oficina</label><textarea id="diagnostico_tecnico" name="diagnostico_tecnico" class="form-control" rows="3">{{ ordem.diagnostico_tecnico if ordem else '' }}</textarea></div>
+</div><hr>
+<h4>2. Itens da Ordem de Serviço</h4>
+<div class="item-list"><h5>Produtos</h5>
+<div class="item-row item-row-header"><div>Autopreencher</div><div>Descrição</div><div>Preço Unit.</div><div>Qtd.</div><div>Total</div><div></div></div>
+<div id="produtos-list">
+{% if ordem.produtos %}{% for p_item in ordem.produtos %}<div class="item-row">
+    <select class="form-select autofill-select"><option value="">Catálogo...</option>{% for p in produtos %}<option value="{{ p.id }}" data-nome="{{ p.nome }}" data-price="{{ '%.2f'|format(p.preco) }}" data-codigo="{{ p.codigo }}">{{ p.nome }}</option>{% endfor %}</select>
+    <input type="hidden" name="produto_codigo" class="item-codigo" value="{{ p_item.codigo }}">
+    <input type="text" name="produto_nome" class="form-control item-nome" value="{{ p_item.nome }}" required>
+    <input type="text" name="produto_preco" class="form-control produto-preco item-preco" value="{{ '%.2f'|format(p_item.preco) }}" placeholder="Ex: 50,00" required>
+    <input type="number" name="produto_qtd" class="form-control produto-qtd" value="{{ p_item.quantidade }}" min="1" required>
+    <span class="item-price item-total-price">{{ format_currency(p_item.preco * p_item.quantidade) }}</span>
+    <button type="button" class="btn btn-danger btn-sm remove-item">&times;</button>
+</div>{% endfor %}{% endif %}
+</div><button type="button" id="add-produto" class="btn btn-success btn-sm mt-2"><i class="fas fa-plus"></i> Produto</button></div>
+
+<div class="item-list"><h5>Serviços</h5>
+<div class="servico-row item-row-header"><div>Autopreencher</div><div>Descrição</div><div>Preço</div><div></div><div></div></div>
+<div id="servicos-list">
+{% if ordem.servicos %}{% for s_item in ordem.servicos %}<div class="servico-row">
+    <select class="form-select autofill-select"><option value="">Catálogo...</option>{% for s in servicos %}<option value="{{ s.id }}" data-nome="{{ s.nome }}" data-price="{{ '%.2f'|format(s.preco) }}" data-codigo="{{ s.codigo }}">{{ s.nome }}</option>{% endfor %}</select>
+    <input type="hidden" name="servico_codigo" class="item-codigo" value="{{ s_item.codigo }}">
+    <input type="text" name="servico_nome" class="form-control item-nome" value="{{ s_item.nome }}" required>
+    <input type="text" name="servico_preco" class="form-control servico-preco item-preco" value="{{ '%.2f'|format(s_item.preco) }}" placeholder="Ex: 150,00" required>
+    <span class="item-price item-total-price">{{ format_currency(s_item.preco) }}</span>
+    <button type="button" class="btn btn-danger btn-sm remove-item">&times;</button>
+</div>{% endfor %}{% endif %}
+</div><button type="button" id="add-servico" class="btn btn-success btn-sm mt-2"><i class="fas fa-plus"></i> Serviço</button></div><hr>
+<h4>3. Fechamento</h4>
+<div class="row" style="align-items: flex-end;"><div class="col-md-8"><div class="row">
+<div class="col-md-3 form-group"><label for="status" class="form-label">Status O.S.</label><select id="status" name="status" class="form-select" required>{% set statuses = ['Aguardando', 'Aprovado', 'Em Execução', 'Finalizado', 'Concluído', 'Cancelado'] %}{% for s in statuses %}<option value="{{ s }}" {% if ordem and ordem.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+<div class="col-md-3 form-group"><label for="forma_pagamento" class="form-label">Pagamento</label><select id="forma_pagamento" name="forma_pagamento" class="form-select"><option value="">N/A</option>{% set payments = ['Dinheiro', 'Cartão de Crédito', 'Cartão de Débito', 'PIX', 'Boleto'] %}{% for p in payments %}<option value="{{ p }}" {% if ordem and ordem.forma_pagamento == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select></div>
+<div class="col-md-3 form-group"><label for="status_pagamento" class="form-label">Status Pag.</label><select id="status_pagamento" name="status_pagamento" class="form-select">{% set pay_statuses = ['Pendente', 'Pago', 'Parcial'] %}{% for ps in pay_statuses %}<option value="{{ ps }}" {% if ordem and ordem.status_pagamento == ps %}selected{% endif %}>{{ ps }}</option>{% endfor %}</select></div>
+<div class="col-md-12 form-group"><label for="condicoes_pagamento" class="form-label">Condições de Pagamento</label></div>
+<div class="col-md-3 form-group">
+    <label for="data_saida" class="form-label">Data de Saída</label>
+    <input type="datetime-local" id="data_saida" name="data_saida" class="form-control" value="{{ ordem.get('data_saida') if ordem else '' }}">
+</div></div>
+<div class="col-md-3 form-group">
+    <label for="data_saida" class="form-label">Data de Saída</label>
+    <input type="datetime-local" id="data_saida" name="data_saida" class="form-control" value="{{ ordem.get('data_saida') if ordem else '' }}">
+</div><input type="text" id="condicoes_pagamento" name="condicoes_pagamento" class="form-control" value="{{ ordem.condicoes_pagamento if ordem else '' }}"></div>
+</div></div><div class="col-md-4"><div class="total-section"><table>
+<tr><td>Total Produtos:</td><td id="subtotal-produtos-val" class="text-end">R$ 0,00</td></tr>
+<tr><td>Total Serviços:</td><td id="subtotal-servicos-val" class="text-end">R$ 0,00</td></tr>
+<tr><td>Deslocamento (R$):</td><td><input type="text" id="deslocamento" name="deslocamento" class="form-control" value="{{ '%.2f'|format(ordem.deslocamento|float) if ordem else '0,00' }}"></td></tr>
+<tr><td>Desconto (R$):</td><td><input type="text" id="desconto" name="desconto" class="form-control" value="{{ '%.2f'|format(ordem.desconto|float) if ordem else '0,00' }}"></td></tr>
+<tr class="total-final"><td><strong>Total:</strong></td><td id="total-val" class="text-end"><strong>R$ 0,00</strong></td></tr>
+</table></div></div></div>
+<input type="hidden" id="subtotal_produtos" name="subtotal_produtos" value="{{ ordem.subtotal_produtos if ordem else 0 }}">
+<input type="hidden" id="subtotal_servicos" name="subtotal_servicos" value="{{ ordem.subtotal_servicos if ordem else 0 }}">
+<input type="hidden" id="total" name="total" value="{{ ordem.total if ordem else 0 }}">
+</div>
+<div class="card-footer text-end"><a href="{{ url_for('ordens') }}" class="btn btn-secondary">Cancelar</a><button type="submit" class="btn btn-primary">Salvar</button></div>
+</form>
+
+<div class="modal" id="novoClienteModalOS"><div class="modal-content modal-sm">
+  <form id="novoClienteFormOS" class="client-form">
+    <div class="modal-header"><h5 class="modal-title">Novo Cliente (Cadastro Rápido)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+        {% include 'cliente_form_fields.html' %}
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-primary">Salvar Cliente</button>
+    </div>
+  </form>
+</div></div>
+
+<div class="modal" id="novoVeiculoModalOS"><div class="modal-content modal-sm">
+  <form id="novoVeiculoFormOS">
+    <div class="modal-header"><h5 class="modal-title">Novo Veículo (Cadastro Rápido)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+        {% include 'veiculo_form_fields.html' %}
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><button type="submit" class="btn btn-primary">Salvar Veículo</button></div>
+  </form>
+</div></div>
+
+<template id="produtos-template"><div class="item-row">
+    <select class="form-select autofill-select"><option value="">Catálogo...</option>{% for p in produtos %}<option value="{{ p.id }}" data-nome="{{ p.nome }}" data-price="{{ '%.2f'|format(p.preco) }}" data-codigo="{{ p.codigo }}">{{ p.nome }}</option>{% endfor %}</select>
+    <input type="hidden" name="produto_codigo" class="item-codigo" value="">
+    <input type="text" name="produto_nome" class="form-control item-nome" placeholder="Descrição do Produto" required>
+    <input type="text" name="produto_preco" class="form-control produto-preco item-preco" placeholder="Preço" required>
+    <input type="number" name="produto_qtd" class="form-control produto-qtd" value="1" min="1" required>
+    <span class="item-price item-total-price">R$ 0,00</span>
+    <button type="button" class="btn btn-danger btn-sm remove-item">&times;</button>
+</div></template>
+<template id="servicos-template"><div class="servico-row">
+    <select class="form-select autofill-select"><option value="">Catálogo...</option>{% for s in servicos %}<option value="{{ s.id }}" data-nome="{{ s.nome }}" data-price="{{ '%.2f'|format(s.preco) }}" data-codigo="{{ s.codigo }}">{{ s.nome }}</option>{% endfor %}</select>
+    <input type="hidden" name="servico_codigo" class="item-codigo" value="">
+    <input type="text" name="servico_nome" class="form-control item-nome" placeholder="Descrição do Serviço" required>
+    <input type="text" name="servico_preco" class="form-control servico-preco item-preco" placeholder="Preço" required>
+    <span class="item-price item-total-price">R$ 0,00</span>
+    <button type="button" class="btn btn-danger btn-sm remove-item">&times;</button>
+</div></template>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Ordens de Serviço{% endblock %}
+{% block content %}
+<div class="content-header"><h1>Ordens de Serviço</h1><a href="{{ url_for('ordem_form') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Nova O.S.</a></div>
+<div class="card"><div class="card-body"><table class="table table-striped">
+<thead><tr><th>#OS</th><th>Cliente</th><th>Veículo</th><th>Data Entrada</th><th>Data Saída</th><th>Status</th><th>Total</th><th>Ações</th></tr></thead>
+<tbody>
+{% for ordem in ordens | sort(attribute='numero_os', reverse=true) %}
+<tr>
+<td>{{ "%04d"|format(ordem.numero_os) }}</td><td>{{ ordem.cliente_nome }}</td><td>{{ ordem.veiculo_placa }}</td><td>{{ ordem.get('data_entrada', 'N/A') | replace('T', ' ') }}</td>
+<td>{{ ordem.get('data_saida', 'N/A') | replace('T', ' ') }}</td>
+<td><span class="badge bg-info">{{ ordem.status }}</span></td><td>{{ format_currency(ordem.total) }}</td>
+<td>
+<a href="{{ url_for('imprimir_ordem', item_id=ordem.id) }}" class="btn btn-sm btn-secondary" target="_blank" title="Imprimir"><i class="fas fa-print"></i></a>
+<a href="{{ url_for('ordem_form', item_id=ordem.id) }}" class="btn btn-sm btn-warning" title="Editar"><i class="fas fa-edit"></i></a>
+<form action="{{ url_for('deletar_ordem', item_id=ordem.id) }}" method="post" class="d-inline delete-form"><button type="submit" class="btn btn-sm btn-danger" title="Deletar"><i class="fas fa-trash"></i></button></form>
+</td></tr>
+{% else %}
+<tr><td colspan="7" style="text-align: center;">Nenhuma Ordem de Serviço encontrada.</td></tr>
+{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

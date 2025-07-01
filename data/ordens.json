@@ -1,0 +1,99 @@
+[
+  {
+    "cliente_id": "03347733-f2f0-4c7e-abb2-901ce3953f98",
+    "veiculo_id": "e9c6050f-d4a2-4dde-996b-59b660d39b01",
+    "mecanico_id": "ce79ad6c-8860-4f29-97c4-9ea50428b85c",
+    "problema_relatado": "rtyhethe",
+    "diagnostico_tecnico": "the",
+    "km_entrada": "",
+    "produtos": [
+      {
+        "codigo": "P0001",
+        "nome": "DANILO CHAGAS DE OLIVEIRA",
+        "preco": 329.0,
+        "quantidade": 1
+      },
+      {
+        "codigo": "P0001",
+        "nome": "DANILO CHAGAS DE OLIVEIRA",
+        "preco": 329.0,
+        "quantidade": 1
+      }
+    ],
+    "servicos": [
+      {
+        "codigo": "",
+        "nome": "ethethn",
+        "preco": 22.0
+      }
+    ],
+    "subtotal_produtos": 658.0,
+    "subtotal_servicos": 22.0,
+    "desconto": 0.0,
+    "deslocamento": 0.0,
+    "total": 680.0,
+    "status": "Aguardando",
+    "forma_pagamento": "",
+    "status_pagamento": "Pendente",
+    "condicoes_pagamento": "",
+    "box": "",
+    "data_conclusao": null,
+    "id": "ce53473c-83a7-4685-a2d7-546eba616f8a",
+    "numero_os": 2,
+    "data_abertura": "2025-07-01",
+    "data_entrada": "2025-07-01T09:27",
+    "data_saida": "2025-07-01T09:27"
+  },
+  {
+    "cliente_id": "03347733-f2f0-4c7e-abb2-901ce3953f98",
+    "veiculo_id": "e9c6050f-d4a2-4dde-996b-59b660d39b01",
+    "mecanico_id": "ce79ad6c-8860-4f29-97c4-9ea50428b85c",
+    "problema_relatado": "",
+    "diagnostico_tecnico": "",
+    "data_entrada": "2025-06-30T09:34",
+    "data_saida": "2025-07-01T09:34",
+    "km_entrada": "",
+    "produtos": [],
+    "servicos": [],
+    "subtotal_produtos": 0.0,
+    "subtotal_servicos": 0.0,
+    "desconto": 0.0,
+    "deslocamento": 0.0,
+    "total": 0.0,
+    "status": "Aguardando",
+    "forma_pagamento": "",
+    "status_pagamento": "Pendente",
+    "condicoes_pagamento": "",
+    "box": "",
+    "data_conclusao": null,
+    "id": "688fab53-727a-480d-885c-23eb807029ad",
+    "numero_os": 3,
+    "data_abertura": "2025-07-01"
+  },
+  {
+    "cliente_id": "03347733-f2f0-4c7e-abb2-901ce3953f98",
+    "veiculo_id": "e9c6050f-d4a2-4dde-996b-59b660d39b01",
+    "mecanico_id": "ce79ad6c-8860-4f29-97c4-9ea50428b85c",
+    "problema_relatado": "",
+    "diagnostico_tecnico": "",
+    "data_entrada": "2025-05-07T09:36",
+    "data_saida": "2025-07-01T09:36",
+    "km_entrada": "",
+    "produtos": [],
+    "servicos": [],
+    "subtotal_produtos": 0.0,
+    "subtotal_servicos": 0.0,
+    "desconto": 0.0,
+    "deslocamento": 0.0,
+    "total": 0.0,
+    "status": "Aguardando",
+    "forma_pagamento": "",
+    "status_pagamento": "Pendente",
+    "condicoes_pagamento": "",
+    "box": "",
+    "data_conclusao": null,
+    "id": "d9e4b4ad-7ca0-4513-8b96-56ef0b603446",
+    "numero_os": 4,
+    "data_abertura": "2025-07-01"
+  }
+]

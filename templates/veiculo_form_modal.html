@@ -1,0 +1,44 @@
+<div class="modal" id="{{ 'veiculoModal' if not veiculo else 'veiculoModal-' ~ veiculo.id }}">
+<div class="modal-content modal-sm">
+<form action="{{ url_for('salvar_veiculo') }}" method="post">
+<input type="hidden" name="id" value="{{ veiculo.id if veiculo else '' }}">
+<div class="modal-header"><h5 class="modal-title">{% if not veiculo %}Novo Veículo{% else %}Editar Veículo{% endif %}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+    <div class="form-group">
+        <label class="form-label">Proprietário</label>
+        <select name="cliente_id" class="form-select" required>
+            <option value="">Selecione...</option>
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}" {% if veiculo and cliente.id == veiculo.cliente_id %}selected{% endif %}>{{ cliente.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group"><label class="form-label">Placa</label><input type="text" name="placa" class="form-control" value="{{ veiculo.placa if veiculo else '' }}" required></div>
+        <div class="col-md-6 form-group"><label class="form-label">Marca</label><input type="text" name="marca" class="form-control" value="{{ veiculo.marca if veiculo else '' }}" required></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group"><label class="form-label">Modelo</label><input type="text" name="modelo" class="form-control" value="{{ veiculo.modelo if veiculo else '' }}" required></div>
+        <div class="col-md-6 form-group"><label class="form-label">Ano</label><input type="number" name="ano" class="form-control" value="{{ veiculo.ano if veiculo else '' }}" min="1900" max="2100"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 form-group"><label class="form-label">Cor</label><input type="text" name="cor" class="form-control" value="{{ veiculo.cor if veiculo else '' }}"></div>
+        <div class="col-md-4 form-group"><label class="form-label">KM Atual</label><input type="number" name="km_atual" class="form-control" value="{{ veiculo.km_atual if veiculo else '' }}"></div>
+        <div class="col-md-4 form-group">
+            <label class="form-label">Combustível</label>
+            <select name="combustivel" class="form-select">
+                <option value="">Selecione...</option>
+                {% set combustiveis = ['Gasolina', 'Álcool', 'Flex', 'Diesel', 'GNV', 'Elétrico'] %}
+                {% for c in combustiveis %}
+                <option value="{{ c }}" {% if veiculo and c == veiculo.combustivel %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group"><label class="form-label">Chassi/VIN</label><input type="text" name="chassi" class="form-control" value="{{ veiculo.chassi if veiculo else '' }}"></div>
+        <div class="col-md-6 form-group"><label class="form-label">Motor</label><input type="text" name="motor" class="form-control" value="{{ veiculo.motor if veiculo else '' }}"></div>
+    </div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
+</form></div></div>

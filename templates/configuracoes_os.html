@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Configurações da O.S.{% endblock %}
+{% block content %}
+<div class="content-header"><h1>Configurações de Impressão da O.S.</h1></div>
+<div class="card"><div class="card-body">
+<form action="{{ url_for('configuracoes_os') }}" method="post">
+<h4>Visibilidade de Campos na Impressão</h4>
+<p class="text-secondary">Marque os campos que você deseja que apareçam na O.S. impressa. Campos não preenchidos não serão exibidos, mesmo que marcados.</p>
+<div class="row">
+    <div class="col-md-4">
+        <h5>Cabeçalho</h5>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_logo" id="exibir_logo" {% if config.os_config.exibir_logo %}checked{% endif %}><label class="form-check-label" for="exibir_logo">Exibir Logo</label></div>
+        
+    </div>
+    <div class="col-md-4">
+        <h5>Cliente</h5>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_endereco_cliente" id="exibir_endereco_cliente" {% if config.os_config.exibir_endereco_cliente %}checked{% endif %}><label class="form-check-label" for="exibir_endereco_cliente">Exibir Endereço do Cliente</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_contato_cliente" id="exibir_contato_cliente" {% if config.os_config.exibir_contato_cliente %}checked{% endif %}><label class="form-check-label" for="exibir_contato_cliente">Exibir Contato (Tel/Email)</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_cpf_cnpj" id="exibir_cpf_cnpj" {% if config.os_config.exibir_cpf_cnpj %}checked{% endif %}><label class="form-check-label" for="exibir_cpf_cnpj">Exibir CPF/CNPJ</label></div>
+    </div>
+    <div class="col-md-4">
+        <h5>Veículo</h5>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_veiculo_cor" id="exibir_veiculo_cor" {% if config.os_config.exibir_veiculo_cor %}checked{% endif %}><label class="form-check-label" for="exibir_veiculo_cor">Exibir Cor</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_veiculo_ano" id="exibir_veiculo_ano" {% if config.os_config.exibir_veiculo_ano %}checked{% endif %}><label class="form-check-label" for="exibir_veiculo_ano">Exibir Ano</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_veiculo_km" id="exibir_veiculo_km" {% if config.os_config.exibir_veiculo_km %}checked{% endif %}><label class="form-check-label" for="exibir_veiculo_km">Exibir KM</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_veiculo_combustivel" id="exibir_veiculo_combustivel" {% if config.os_config.exibir_veiculo_combustivel %}checked{% endif %}><label class="form-check-label" for="exibir_veiculo_combustivel">Exibir Combustível</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_box" id="exibir_box" {% if config.os_config.exibir_box %}checked{% endif %}><label class="form-check-label" for="exibir_box">Exibir Box</label></div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-4">
+        <h5>Rodapé</h5>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_mecanico" id="exibir_mecanico" {% if config.os_config.exibir_mecanico %}checked{% endif %}><label class="form-check-label" for="exibir_mecanico">Exibir Mecânico Responsável</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" name="exibir_condicoes_pagamento" id="exibir_condicoes_pagamento" {% if config.os_config.exibir_condicoes_pagamento %}checked{% endif %}><label class="form-check-label" for="exibir_condicoes_pagamento">Exibir Condições de Pagamento</label></div>
+    </div>
+</div>
+<hr>
+<h4>Texto do Rodapé</h4>
+<p class="text-secondary">O texto abaixo será impresso no final da Ordem de Serviço.</p>
+<div class="form-group">
+    <input type="text" name="texto_rodape" class="form-control" value="{{ config.os_config.texto_rodape }}">
+</div>
+<div class="text-end mt-4"><button type="submit" class="btn btn-primary">Salvar Configurações da O.S.</button></div>
+</form></div></div>
+{% endblock %}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>O.S. {{ "%06d"|format(ordem.numero_os) }}</title>
+    <style>
+        @page { 
+            size: A4; 
+            margin: 0;
+        }
+        body { 
+            margin: 1cm;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+            font-size: 9pt; 
+            color: #000; 
+            line-height: 1.2;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #000;
+            padding-bottom: 5px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header-left .logo {
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+        .header-left .logo img {
+            max-width: 100px;
+            max-height: 70px;
+        }
+        .header-left .company-details h1 {
+            margin: 0;
+            font-size: 16pt;
+            font-weight: bold;
+        }
+        .header-left .company-details p {
+            margin: 1px 0;
+            font-size: 9pt;
+        }
+        .os-info {
+            text-align: right;
+        }
+        .os-info h2 {
+            margin: 0;
+            font-size: 11pt;
+            font-weight: bold;
+        }
+        .os-info p {
+            margin: 1px 0;
+            font-size: 8pt;
+        }
+
+        .main-table { 
+            margin-top: 8px;
+            border: 1px solid #000; 
+        }
+        .main-table td { 
+            padding: 2px 5px;
+            vertical-align: top; 
+            font-size: 8.5pt; 
+        }
+        .main-table .label { 
+            font-weight: bold; 
+        }
+        .main-table .section-title td { 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            background-color: #e0e0e0; 
+            border-top: 1px solid #000; 
+            border-bottom: 1px solid #000; 
+            padding: 2px 5px;
+            font-size: 8.5pt; 
+        }
+
+        .items-table { 
+            margin-top: 5px;
+        }
+        .items-table th, .items-table td { 
+            padding: 2px 4px;
+            vertical-align: top; 
+            border-bottom: 1px dotted #ccc; 
+            font-size: 8pt;
+        }
+        .items-table thead th { 
+            font-weight: bold; 
+            text-align: left; 
+            border-bottom: 1px solid #000; 
+        }
+        .items-table .text-right { 
+            text-align: right; 
+        }
+        .items-table .total-line td { 
+            border-top: 1px solid #000; 
+            font-weight: bold; 
+            padding-top: 3px;
+        }
+
+        .footer { 
+            margin-top: 8px;
+        }
+        .footer-flex { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+        }
+        .footer-left { 
+            width: 65%; 
+        }
+        .footer-right { 
+            width: 33%; 
+        }
+
+        .summary-table td { 
+            padding: 2px 5px;
+            font-size: 9pt; 
+        }
+        .summary-table .label { 
+            font-weight: normal; 
+            text-align: right; 
+        }
+        .summary-table .value { 
+            font-weight: bold; 
+            text-align: right; 
+        }
+        .summary-table .total td {
+            border-top: 1px solid #000;
+            padding-top: 3px;
+        }
+        .summary-table .total .value { 
+            font-size: 10pt;
+        }
+
+        .signature-box { 
+            margin-top: 30px;
+            text-align: center; 
+        }
+        .signature-line { 
+            border-top: 1px solid #000; 
+            margin: 0 auto; 
+            width: 250px; 
+            padding-top: 2px; 
+        }
+
+        .footer-text { 
+            margin-top: 15px;
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 8pt; 
+        }
+    </style>
+</head>
+<body onload="window.print()">
+
+    <div class="header-container">
+        <div class="header-left">
+            <div class="logo">
+                {% if config.os_config.exibir_logo and config.logo_path %}
+                    <img src="{{ url_for('uploaded_file', filename=config.logo_path, _external=True) }}" alt="Logo">
+                {% endif %}
+            </div>
+            <div class="company-details">
+                <h1>{{ config.nome_oficina }}</h1>
+                {% if config.endereco %}<p>{{ config.endereco }}</p>{% endif %}
+                {% if config.telefone or config.cnpj %}
+                <p>
+                    {% if config.telefone %}Tel: {{ config.telefone }}{% endif %}
+                    {% if config.telefone and config.cnpj %} | {% endif %}
+                    {% if config.cnpj %}CNPJ: {{ config.cnpj }}{% endif %}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="os-info">
+            <h2>O.S {{ "%06d"|format(ordem.numero_os) }}</h2>
+            {% if config.os_config.exibir_data_hora %}
+            <p><strong>Data:</strong> {{ now.strftime('%d/%m/%Y') }} <strong>Hora:</strong> {{ now.strftime('%H:%M') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <table class="main-table">
+        <tr class="section-title"><td colspan="3">Dados do Cliente</td></tr>
+        <tr>
+            <td colspan="3"><span class="label">Cliente:</span> {{ cliente.nome if cliente else 'N/A' }}</td>
+        </tr>
+        <tr>
+            <td>{% if config.os_config.exibir_cpf_cnpj and (cliente.cpf or cliente.cnpj) %}<span class="label">{{ 'CPF' if cliente.tipo_cliente == 'pf' else 'CNPJ' }}:</span> {{ cliente.cpf or cliente.cnpj }}{% endif %}</td>
+            <td><span class="label">Email:</span> {{ cliente.email or '' }}</td>
+            <td>{% if config.os_config.exibir_contato_cliente and cliente.telefone %}<span class="label">Telefone:</span> {{ cliente.telefone }}{% endif %}</td>
+        </tr>
+        {% if config.os_config.exibir_endereco_cliente and (cliente.rua or cliente.cidade) %}
+        <tr>
+            <td><span class="label">Endereço:</span> {{ cliente.rua or '' }}{% if cliente.numero %}, {{ cliente.numero }}{% endif %}</td>
+            <td><span class="label">Bairro:</span> {{ cliente.bairro or '' }}</td>
+            <td><span class="label">Cidade/UF:</span> {{ cliente.cidade or '' }}{% if cliente.uf %}/{{ cliente.uf }}{% endif %}</td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <table class="main-table" style="border-top: none;">
+        <tr class="section-title"><td colspan="4">Dados do Veículo</td></tr>
+        <tr>
+            <td><span class="label">Placa:</span> {{ veiculo.placa if veiculo else 'N/A' }}</td>
+            <td colspan="3"><span class="label">Marca/Modelo:</span> {{ veiculo.marca if veiculo else 'N/A' }} / {{ veiculo.modelo if veiculo else 'N/A' }}</td>
+        </tr>
+        <tr>
+            {% if config.os_config.exibir_veiculo_cor and veiculo.cor %}<td><span class="label">Cor:</span> {{ veiculo.cor }}</td>{% endif %}
+            {% if config.os_config.exibir_veiculo_ano and veiculo.ano %}<td><span class="label">Ano:</span> {{ veiculo.ano }}</td>{% endif %}
+            {% if config.os_config.exibir_veiculo_km and ordem.km_entrada %}<td><span class="label">KM:</span> {{ ordem.km_entrada }}</td>{% endif %}
+            {% if config.os_config.exibir_veiculo_combustivel and veiculo.combustivel %}<td><span class="label">Combustível:</span> {{ veiculo.combustivel }}</td>{% endif %}
+            {% if config.os_config.exibir_box and ordem.box %}<td><span class="label">Box:</span> {{ ordem.box }}</td>{% endif %}
+        </tr>
+        <tr>
+            <td colspan="2"><span class="label">Data de Entrada:</span> {{ ordem.get('data_entrada', '') | replace('T', ' às ') }}</td>
+            <td colspan="2"><span class="label">Data de Saída:</span> {{ ordem.get('data_saida', '') | replace('T', ' às ') }}</td>
+        </tr>
+    </table>
+
+    {% if ordem.problema_relatado or ordem.diagnostico_tecnico %}
+    <table class="main-table">
+        {% if ordem.problema_relatado %}
+        <tr class="section-title"><td colspan="4">Defeito/Reclamação do Cliente</td></tr>
+        <tr><td colspan="4">{{ ordem.problema_relatado | nl2br }}</td></tr>
+        {% endif %}
+        {% if ordem.diagnostico_tecnico %}
+        <tr class="section-title"><td colspan="4">Diagnóstico Técnico</td></tr>
+        <tr><td colspan="4">{{ ordem.diagnostico_tecnico | nl2br }}</td></tr>
+        {% endif %}
+    </table>
+    {% endif %}
+
+    {% if ordem.produtos %}
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Cód.</th>
+                <th>Descrição do Item</th>
+                <th class="text-right">Qtd.</th>
+                <th class="text-right">Vl. Unit.</th>
+                <th class="text-right">Vl. Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ordem.produtos %}
+            <tr>
+                <td>{{ item.codigo }}</td>
+                <td>{{ item.nome }}</td>
+                <td class="text-right">{{ item.quantidade }}</td>
+                <td class="text-right">{{ "%.2f"|format(item.preco|float) }}</td>
+                <td class="text-right">{{ "%.2f"|format(item.preco|float * item.quantidade|int) }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-line">
+                <td colspan="4" class="text-right">Total das Peças R$</td>
+                <td class="text-right">{{ "%.2f"|format(ordem.subtotal_produtos|float) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if ordem.servicos %}
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Cód.</th>
+                <th>Descrição dos Serviços</th>
+                <th class="text-right">Vl. Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ordem.servicos %}
+            <tr>
+                <td>{{ item.codigo }}</td>
+                <td>{{ item.nome }}</td>
+                <td class="text-right">{{ "%.2f"|format(item.preco|float) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <div class="footer">
+        <div class="footer-flex">
+            <div class="footer-left">
+                {% if config.os_config.exibir_mecanico and mecanico %}
+                <p><strong>Responsável:</strong> {{ mecanico.nome }}</p>
+                {% endif %}
+                <p><strong>Situação Atual:</strong> {{ ordem.status }}</p>
+                {% if config.os_config.exibir_condicoes_pagamento and ordem.condicoes_pagamento %}
+                <p><strong>Condições de Pagamento:</strong> {{ ordem.condicoes_pagamento }}</p>
+                {% endif %}
+            </div>
+            <div class="footer-right">
+                <table class="summary-table">
+                    <tr>
+                        <td class="label">VALOR PRODUTOS:</td>
+                        <td class="value">{{ "%.2f"|format(ordem.subtotal_produtos|float) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">VALOR SERVIÇOS:</td>
+                        <td class="value">{{ "%.2f"|format(ordem.subtotal_servicos|float) }}</td>
+                    </tr>
+                    {% if ordem.deslocamento and ordem.deslocamento > 0 %}
+                    <tr>
+                        <td class="label">DESLOCAMENTO:</td>
+                        <td class="value">{{ "%.2f"|format(ordem.deslocamento|float) }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if ordem.desconto and ordem.desconto > 0 %}
+                    <tr>
+                        <td class="label">VALOR DESCONTO:</td>
+                        <td class="value">{{ "%.2f"|format(ordem.desconto|float) }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr class="total">
+                        <td class="label">VALOR TOTAL:</td>
+                        <td class="value">{{ "%.2f"|format(ordem.total|float) }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="signature-box">
+            <div class="signature-line">Visto</div>
+        </div>
+
+        {% if config.os_config.texto_rodape %}
+        <div class="footer-text">
+            {{ config.os_config.texto_rodape }}
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

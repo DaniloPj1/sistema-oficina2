@@ -1,0 +1,22 @@
+[
+  {
+    "tipo_cliente": "pf",
+    "nome": "DANILO CHAGAS DE OLIVEIRA",
+    "nome_fantasia": "",
+    "cpf": "13906735702",
+    "rg": "",
+    "cnpj": "",
+    "ie": "",
+    "telefone": "27997696545",
+    "email": "danilo.pj1@hotmail.com",
+    "cep": "29704350",
+    "rua": "Rua Cachoeiro do Itapemirim",
+    "numero": "476",
+    "bairro": "São Marcos",
+    "cidade": "Colatina",
+    "uf": "ES",
+    "status": "Liberado",
+    "id": "03347733-f2f0-4c7e-abb2-901ce3953f98",
+    "data_cadastro": "2025-06-30"
+  }
+]

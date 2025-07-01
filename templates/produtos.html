@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Produtos{% endblock %}
+{% block content %}
+<div class="content-header"><h1>Gerenciar Produtos</h1><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoProdutoModal"><i class="fas fa-plus"></i> Novo Produto</button></div>
+<div class="card"><div class="card-body"><table class="table table-striped">
+<thead><tr><th>Código</th><th>Nome</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
+<tbody>
+{% for produto in produtos %}
+<tr><td>{{ produto.codigo }}</td><td>{{ produto.nome }}</td><td>{{ format_currency(produto.preco) }}</td><td>{{ produto.estoque }}</td>
+<td>
+    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarProdutoModal-{{ produto.id }}" title="Editar"><i class="fas fa-edit"></i></button>
+    <form action="{{ url_for('deletar_produto', item_id=produto.id) }}" method="post" class="d-inline delete-form">
+        <button type="submit" class="btn btn-sm btn-danger" title="Deletar"><i class="fas fa-trash"></i></button>
+    </form>
+</td>
+</tr>
+{% else %}
+<tr><td colspan="5" style="text-align: center;">Nenhum produto cadastrado.</td></tr>
+{% endfor %}
+</tbody></table></div></div>
+<div class="modal" id="novoProdutoModal"><div class="modal-content modal-sm">
+<form action="{{ url_for('novo_produto') }}" method="post">
+<div class="modal-header"><h5 class="modal-title">Novo Produto</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+    <div class="form-group"><label class="form-label">Nome do Produto</label><input type="text" name="nome" class="form-control" required></div>
+    <div class="form-group"><label class="form-label">Descrição</label><textarea name="descricao" class="form-control" rows="2"></textarea></div>
+    <div class="row"><div class="col-md-6 form-group"><label class="form-label">Preço (R$)</label><input type="text" name="preco" class="form-control" placeholder="Ex: 50,00" required></div>
+    <div class="col-md-6 form-group"><label class="form-label">Estoque</label><input type="number" name="estoque" class="form-control" required></div></div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
+</form></div></div>
+{% for produto in produtos %}
+<div class="modal" id="editarProdutoModal-{{ produto.id }}"><div class="modal-content modal-sm">
+<form action="{{ url_for('editar_produto', item_id=produto.id) }}" method="post">
+<div class="modal-header"><h5 class="modal-title">Editar Produto</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+    <div class="form-group"><label class="form-label">Nome</label><input type="text" name="nome" class="form-control" value="{{ produto.nome }}" required></div>
+    <div class="form-group"><label class="form-label">Descrição</label><textarea name="descricao" class="form-control" rows="2">{{ produto.descricao }}</textarea></div>
+    <div class="row"><div class="col-md-6 form-group"><label class="form-label">Preço (R$)</label><input type="text" name="preco" class="form-control" value="{{ '%.2f'|format(produto.preco) }}" placeholder="Ex: 50,00" required></div>
+    <div class="col-md-6 form-group"><label class="form-label">Estoque</label><input type="number" name="estoque" class="form-control" value="{{ produto.estoque }}" required></div></div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><button type="submit" class="btn btn-primary">Salvar Alterações</button></div>
+</form></div></div>
+{% endfor %}
+{% endblock %}

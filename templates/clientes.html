@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+<div class="content-header">
+    <h1>Gerenciar Clientes</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#clienteModal"><i class="fas fa-plus"></i> Novo Cliente</button>
+</div>
+<div class="card">
+    <div class="card-header">
+        <form method="get" action="{{ url_for('clientes') }}" class="d-flex">
+            <input type="search" name="q" class="form-control" placeholder="Pesquisar por nome, documento ou telefone..." value="{{ query or '' }}">
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Buscar</button>
+        </form>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead><tr><th>Nome / Razão Social</th><th>Documento</th><th>Telefone</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td><a href="{{ url_for('detalhes_cliente', item_id=cliente.id) }}" style="color: var(--info-color);">{{ cliente.nome }}</a></td>
+                    <td>{{ cliente.cpf or cliente.cnpj }}</td>
+                    <td>{{ cliente.telefone }}</td>
+                    <td>
+                        <span class="badge bg-{{ (cliente.status or 'liberado')|lower }}">{{ cliente.status or 'Liberado' }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('detalhes_cliente', item_id=cliente.id) }}" class="btn btn-sm btn-info" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#clienteModal-{{ cliente.id }}" title="Editar"><i class="fas fa-edit"></i></button>
+                        <form action="{{ url_for('deletar_cliente', item_id=cliente.id) }}" method="post" class="d-inline delete-form">
+                            <button type="submit" class="btn btn-sm btn-danger" title="Deletar"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" style="text-align: center;">Nenhum cliente encontrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{# Modal para NOVO cliente #}
+{% set cliente = none %}
+{% include 'cliente_form_modal.html' %}
+
+{# Modais para EDITAR clientes existentes #}
+{% for cliente_item in clientes %}
+    {% set cliente = cliente_item %}
+    {% include 'cliente_form_modal.html' %}
+{% endfor %}
+{% endblock %}

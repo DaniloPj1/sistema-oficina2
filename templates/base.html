@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Oficina{% endblock %} - {{ nome_oficina }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <aside class="sidebar no-print">
+        <div class="sidebar-header">
+            <h3>
+                {% if logo_path %}
+                    <img src="{{ url_for('uploaded_file', filename=logo_path) }}" alt="Logo">
+                {% else %}
+                    <i class="fas fa-tools"></i>
+                {% endif %}
+                <span>{{ nome_oficina }}</span>
+            </h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('dashboard') }}"><i class="fas fa-chart-pie fa-fw"></i> Painel</a></li>
+            <li><a href="{{ url_for('ordens') }}"><i class="fas fa-file-alt fa-fw"></i> Ordens de Serviço</a></li>
+            <li><a href="{{ url_for('clientes') }}"><i class="fas fa-users fa-fw"></i> Clientes</a></li>
+            <li><a href="{{ url_for('veiculos') }}"><i class="fas fa-car fa-fw"></i> Veículos</a></li>
+            <li><a href="{{ url_for('mecanicos') }}"><i class="fas fa-user-cog fa-fw"></i> Mecânicos</a></li>
+            <li><a href="{{ url_for('produtos') }}"><i class="fas fa-box fa-fw"></i> Produtos</a></li>
+            <li><a href="{{ url_for('servicos') }}"><i class="fas fa-wrench fa-fw"></i> Serviços</a></li>
+            <li><a href="{{ url_for('financeiro') }}"><i class="fas fa-dollar-sign fa-fw"></i> Financeiro</a></li>
+            <li><a href="{{ url_for('relatorios') }}"><i class="fas fa-chart-line fa-fw"></i> Relatórios</a></li>
+            <li class="has-submenu">
+                <a href="#"><i class="fas fa-cogs fa-fw"></i> Configurações</a>
+                <ul class="submenu">
+                    <li><a href="{{ url_for('configuracoes') }}"><i class="fas fa-building fa-fw"></i> Empresa</a></li>
+                    <li><a href="{{ url_for('configuracoes_os') }}"><i class="fas fa-print fa-fw"></i> O.S. Impressão</a></li>
+                </ul>
+            </li>
+            <li><a href="{{ url_for('backup') }}"><i class="fas fa-database fa-fw"></i> Backup</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt fa-fw"></i> Sair</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="no-print">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

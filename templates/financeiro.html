@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Financeiro{% endblock %}
+{% block content %}
+<div class="content-header"><h1>Controle Financeiro</h1><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#novaContaModal"><i class="fas fa-plus"></i> Nova Despesa</button></div>
+<div class="row">
+<div class="col-lg-6"><div class="card"><div class="card-header"><h2><i class="fas fa-arrow-down" style="color:var(--success-color);"></i> A Receber (O.S.)</h2></div><div class="card-body">
+<table class="table table-striped"><thead><tr><th>#OS</th><th>Cliente</th><th>Valor</th><th>Ação</th></tr></thead>
+<tbody>{% for os in contas_receber_os %}
+<tr><td>{{ "%04d"|format(os.numero_os) }}</td><td>{{ os.cliente_nome }}</td><td>{{ format_currency(os.total) }}</td>
+<td><form action="{{ url_for('pagar_os', item_id=os.id) }}" method="post"><button type="submit" class="btn btn-sm btn-success">Recebido</button></form></td>
+</tr>{% else %}
+<tr><td colspan="4" style="text-align: center;">Nenhuma conta a receber.</td></tr>{% endfor %}
+</tbody></table></div></div></div>
+<div class="col-lg-6"><div class="card"><div class="card-header"><h2><i class="fas fa-arrow-up" style="color:var(--danger-color);"></i> A Pagar (Despesas)</h2></div><div class="card-body">
+<table class="table table-striped"><thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ação</th></tr></thead>
+<tbody>{% for conta in contas_pagar %}
+<tr><td>{{ conta.descricao }}</td><td>{{ format_currency(conta.valor) }}</td><td>{{ conta.data_vencimento }}</td>
+<td><span class="badge bg-{{ conta.status|lower }}">{{ conta.status }}</span></td>
+<td>{% if conta.status != 'Pago' %}<form action="{{ url_for('pagar_conta', item_id=conta.id) }}" method="post"><button type="submit" class="btn btn-sm btn-success">Pagar</button></form>{% endif %}</td>
+</tr>{% else %}
+<tr><td colspan="5" style="text-align: center;">Nenhuma despesa.</td></tr>{% endfor %}
+</tbody></table></div></div></div>
+</div>
+<div class="modal" id="novaContaModal"><div class="modal-content modal-sm">
+<form action="{{ url_for('nova_conta') }}" method="post">
+<div class="modal-header"><h5 class="modal-title">Nova Despesa</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+    <div class="form-group mb-3"><label class="form-label">Descrição</label><input type="text" name="descricao" class="form-control" required></div>
+    <div class="row"><div class="col-md-6 form-group"><label class="form-label">Valor (R$)</label><input type="text" name="valor" class="form-control" required placeholder="Ex: 50,00"></div>
+    <div class="col-md-6 form-group"><label class="form-label">Data de Vencimento</label><input type="date" name="data_vencimento" class="form-control" required></div></div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
+</form></div></div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block content %}
+<div class="content-header"><h1>Relatórios</h1></div>
+<div class="card no-print"><div class="card-header"><h2>Filtros</h2></div><div class="card-body">
+<form id="report-form" action="{{ url_for('relatorios') }}" method="post">
+<div class="row">
+    <div class="col-md-3 form-group"><label for="tipo_relatorio" class="form-label">Tipo</label><select name="tipo_relatorio" id="tipo_relatorio" class="form-select" required>
+        <option value="faturamento" {% if form_data.tipo_relatorio == 'faturamento' %}selected{% endif %}>Faturamento</option>
+        <option value="historico_cliente" {% if form_data.tipo_relatorio == 'historico_cliente' %}selected{% endif %}>Histórico por Cliente</option>
+        <option value="servicos_veiculo" {% if form_data.tipo_relatorio == 'servicos_veiculo' %}selected{% endif %}>Serviços por Veículo</option>
+    </select></div>
+    <div class="col-md-3 form-group"><label for="data_inicio" class="form-label">Data Início</label><input type="date" id="data_inicio" name="data_inicio" class="form-control" value="{{ form_data.data_inicio or '' }}" required></div>
+    <div class="col-md-3 form-group"><label for="data_fim" class="form-label">Data Fim</label><input type="date" id="data_fim" name="data_fim" class="form-control" value="{{ form_data.data_fim or '' }}" required></div>
+</div>
+<div class="row">
+    <div id="cliente-filter" class="col-md-6 form-group" style="display: none;"><label for="cliente_id_report" class="form-label">Cliente</label><select name="cliente_id" id="cliente_id_report" class="form-select"><option value="">Selecione...</option>{% for c in clientes %}<option value="{{ c.id }}" {% if form_data.cliente_id == c.id %}selected{% endif %}>{{ c.nome }}</option>{% endfor %}</select></div>
+    <div id="veiculo-filter" class="col-md-6 form-group" style="display: none;"><label for="veiculo_id_report" class="form-label">Veículo</label><select name="veiculo_id" id="veiculo_id_report" class="form-select"><option value="">Selecione...</option>{% for v in veiculos %}<option value="{{ v.id }}" {% if form_data.veiculo_id == v.id %}selected{% endif %}>{{ v.marca }} {{ v.modelo }} - {{v.placa}}</option>{% endfor %}</select></div>
+</div>
+<button type="submit" class="btn btn-primary">Gerar Relatório</button>
+</form></div></div>
+{% if show_results %}
+<div class="card mt-4"><div class="card-header">
+<h2>Resultados do Relatório</h2>
+<button class="btn btn-secondary no-print" onclick="window.print()"><i class="fas fa-print"></i> Imprimir</button>
+</div><div class="card-body">
+<h3 class="print-only">{{ form_data.tipo_relatorio|replace('_', ' ')|title }} de {{form_data.data_inicio}} a {{form_data.data_fim}}</h3>
+<table class="table table-striped"><thead><tr><th>#OS</th><th>Data</th><th>Cliente</th><th>Veículo</th><th>Status</th><th>Total</th></tr></thead><tbody>
+{% for item in dados.items %}
+<tr><td>{{ "%04d"|format(item.numero_os) }}</td><td>{{ item.data_conclusao or item.data_abertura }}</td><td>{{ item.cliente_nome }}</td><td>{{ item.veiculo_placa }}</td><td>{{ item.status }}</td><td>{{ format_currency(item.total) }}</td></tr>
+{% else %}
+<tr><td colspan="6" style="text-align: center;">Nenhum resultado para os filtros.</td></tr>
+{% endfor %}
+</tbody><tfoot><tr><td colspan="5" class="text-end"><strong>Total Geral:</strong></td><td><strong>{{ format_currency(dados.total_geral) }}</strong></td></tr></tfoot>
+</table></div></div>
+{% endif %}
+{% endblock %}
